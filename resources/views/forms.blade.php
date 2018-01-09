@@ -17,8 +17,13 @@
         
         @if(Session::has('link'))
             <div class="alert alert-info">
-                <h3> <span>Shortened Link:</span> {{Session::get('link')}}</h3>
-                <a href="{{Session::get('link')}}">Cliack here for your shortened URL</a>
+                <h3> <span>Shortened Link:</span> 
+                    <a href="{{Session::get('link')}}" id="link">
+                        {{url(Session::get('link'))}}
+                    </a>
+                    <button class="btn bnt-danger" onclick="copylinks()">Copy!</button>
+
+                </h3>
             </div>
         @endif
 
@@ -47,3 +52,23 @@
     </div>
 </body>
 </html>
+<script type="text/javascript">
+    function copylinks() {
+        // Create a "hidden" input
+        var aux = document.createElement('input');
+
+        aux.setAttribute('value', document.getElementById('link').innerHTML);
+
+        // Append it to the body 
+        document.body.appendChild(aux);
+
+        // Highlight its contents
+        aux.select();
+
+        // Copy the highlighted text
+        document.execCommand("copy");
+
+        // Remove it from the body
+        document.body.removeChild(aux);
+    }
+</script>
