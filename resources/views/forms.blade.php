@@ -8,7 +8,10 @@
 
 <body>
     <div id="container">
-            <h2>Uber-Shortener</h2> {{Form::open(array('url'=>'/','method'=>'post'))}} {{Form::text('link',Input::old('link'),array('placeholder'=>'Insert your URL here and press enter!'))}} {{Form::close()}}
+        <h2>Uber-Shortener</h2>
+        {{Form::open(array('url'=>'/','method'=>'post'))}}
+        {{Form::text('link',Input::old('link'),array('placeholder'=>'Insert your URL here and press enter!'))}}
+        {{Form::close()}}
     </div>
 </body>
 
