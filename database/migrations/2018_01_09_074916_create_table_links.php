@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLinksTable extends Migration
+class CreateTableLinks extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class CreateLinksTable extends Migration
     public function up()
     {
         Schema::table('links', function (Blueprint $table) {
-            $table->incriments('id');
-            $table->text('url');
+            $table->increments('id');
+            $table->text('url')->nullable();
             $table->string('hash');
         });
     }
