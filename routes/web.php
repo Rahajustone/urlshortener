@@ -10,52 +10,59 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-// use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Link;
 
+Route::get('/', function () {
+    // return view('welcome');
+    return view('forms');
+});
+Route::post('/', function(Request $request) {
 
-// Route::get('/', function () {
-//     // return view('welcome');
-//     return view('forms');
-// });
-// Route::post('/', function() {
-//     // We first define form validation rules
-//     $rules = array(
-//         'link' => 'required|url'
-//     );
+    // Then we run the form validation
+    $validation = Validator::make($request->all(), [
+    	'url' => 'required|url'
+    ]);
 
-//     $request = new Request();
+    if ($validation->fails()) {
+        return Redirect::to('/')
+        ->withInput()
+        ->withErrors($validation);
+    } else {
+        $link = Link::where('url', $request->url)->first();
+        if ($link) {
+            return Redirect::to('/')
+            ->withInput()
+            ->with('link', $link->hash);
+        } else {
+            // First we create a new unique Hash
+            do {
+                $newHash = str_random(6);
+            } while(Link::where('hash', $newHash)->count() > 0);
 
-//     // Then we run the form validation
-//     $validation = Validator::make($request->all(), $rules);
+            // Now we create a new database record
+            Link::create([
+                'url'   => $request->url,
+                'hash'  => $newHash
+            ]);
 
-//     if ($validation->fails()) {
-//         return Redirect::to('/')
-//         ->withInput()
-//         ->withErrors($validation);
-//     } else {
-//         $link = Link::where('ulr', '=', $request->link)
-//         ->first();
-//         if ($link) {
-//             return Redirect::to('/')
-//             ->withInput()
-//             ->with('link', $link->hash);
-//         } else {
-//             // First we create a new unique Hash
-//             do {
-//                 $newHash = Str::random(6);
-//             } while(Link::where('hash', '=', $newHash)->count() > 0);
+            // And then we return the new shortended URL info to our action
+            return Redirect::to('/')
+            ->withInput()
+            ->with('link', $newHash);
+        }
+    }
+});
 
-//             // Now we create a new database record
-//             Link::create([
-//                 'url'   => $request->link,
-//                 'hash'  => $newHash
-//             ]);
+Route::get('{hash}', function($hash) {
 
-//             // And then we return the new shortended URL info to our action
-//             return Redirect::to('/')
-//             ->withInput()
-//             ->with('link', $newHash);
-//         }
-//     }
-// });
+	$link = Link::where('hash', $hash)->first();
+
+	if ($link) {
+		return Redirect::to($link->url);
+	} else {
+		return Redirect::to('/')->with('message', 'Invalid Link');
+	}
+});
+// ->where('hash', "[0-9a-zA-Z] {6}");

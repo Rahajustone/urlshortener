@@ -9,6 +9,6 @@ class Link extends Model
     public $table = "links";
     
     protected $fillable = [
-        'link', 'hash',
+        'url', 'hash',
     ];
 }

@@ -12,8 +12,22 @@
 <body style="background-color: #eee">
     <div class="container">
         @if(Session::has('errors'))
-            <h3 class="alert alert-danger">{{ $errors->first('link')}}</h3>
+            <h3 class="alert alert-danger">{{ $errors->first('url')}}</h3>
         @endif
+        
+        @if(Session::has('link'))
+            <div class="alert alert-info">
+                <h3> <span>Shortened Link:</span> {{Session::get('link')}}</h3>
+                <a href="{{Session::get('link')}}">Cliack here for your shortened URL</a>
+            </div>
+        @endif
+
+        @if(Session::has('message'))
+            <div class="alert alert-danger">
+                <h3 class="errors"> {{ Session::get('message') }} </h3>
+            </div>
+        @endif
+
         <div class="text-center center-block" style="margin-top: 200px;">
             <form action="{{ url('/') }}" class="form" method="POST" enctype="multipart/form-data">
                 {{ csrf_field() }}
@@ -21,7 +35,7 @@
                     <div class="col-lg-10 col-md-offset-1">
                     <h1 class="">Uber-Shortener</h1>
                         <div class="input-group  input-group-lg">
-                          <input type="text" class="form-control" placeholder="Insert your url here and press enter!" name="links">
+                          <input type="text" class="form-control" placeholder="Insert your url here and press enter!" name="url" value="{{ old('link')}}">
                           <span class="input-group-btn">
                             <button class="btn btn-default" type="submit">Go!</button>
                           </span>
@@ -32,5 +46,4 @@
         </div>
     </div>
 </body>
-
 </html>
